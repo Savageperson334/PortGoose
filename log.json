@@ -9,5 +9,11 @@
     "created_at": "2026-11-07T12:51:23.558Z",
     "message": "calc (12+8)*3",
     "source": "Python sandbox setup test"
+  },
+  {
+    "id": "portgoose-python-plot-smoke-20261107",
+    "created_at": "2026-11-07T12:52:08.591Z",
+    "message": "plot sin(x)",
+    "source": "Python sandbox plot test"
   }
 ]
