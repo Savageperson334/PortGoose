@@ -1,0 +1,22 @@
+{
+  "schema": 2,
+  "revision": "initial-v2",
+  "seed": 4,
+  "operations": [
+    {
+      "id": "stem-grow-1",
+      "type": "grow",
+      "enabled": true
+    },
+    {
+      "id": "stem-fork-1",
+      "type": "fork",
+      "enabled": true
+    },
+    {
+      "id": "stem-bloom-1",
+      "type": "bloom",
+      "enabled": true
+    }
+  ]
+}
