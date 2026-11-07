@@ -1,12 +1,12 @@
-name: Python sandbox
+name: Python mutation sandbox
 
 on:
   push:
     branches: [main]
     paths:
-      - log.json
-      - scripts/process_log.py
-      - tests/test_processor.py
+      - sandbox-input.json
+      - scripts/mutate.py
+      - tests/test_mutate.py
       - .github/workflows/python-sandbox.yml
   workflow_dispatch:
 
@@ -14,15 +14,15 @@ permissions:
   contents: write
 
 concurrency:
-  group: portgoose-python-sandbox
+  group: portgoose-mutator
   cancel-in-progress: false
 
 jobs:
-  process:
+  mutate:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Check out the repository
+      - name: Check out files
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -32,31 +32,32 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Run evaluator tests
+      - name: Run unit tests
         run: python -m unittest discover -s tests -v
 
-      - name: Process latest math command
-        run: python scripts/process_log.py
-
-      - name: Commit updated sandbox data
+      - name: Generate and commit current model
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet -- sandbox.json; then
-            echo "No sandbox change."
-            exit 0
-          fi
-          git add sandbox.json
-          git commit -m "sandbox: update Python math result"
-          # A simultaneous form submission may have moved main. Rebase and retry.
-          for attempt in 1 2 3; do
-            git pull --rebase origin main
+          # Recalculate after each fetch. Older queued runs must NOT
+          # overwrite the output for a newer mutation request.
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git reset --hard origin/main
+            python scripts/mutate.py
+            git add sandbox.json
+            if git diff --cached --quiet; then
+              echo "Already up to date."
+              exit 0
+            fi
+            git commit -m "sandbox: render current mutation stack"
             if git push origin HEAD:main; then
               exit 0
             fi
+            echo "Main changed, recalculating latest state..."
             sleep 2
           done
-          echo "Could not push sandbox result after retries." >&2
+          echo "Unable to publish latest sandbox state." >&2
           exit 1
