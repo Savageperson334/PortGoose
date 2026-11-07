@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "revision": "test-ripple-20261107",
+  "revision": "a1632f14-28c9-4fa1-a04e-aacbcef13daa",
   "seed": 4,
   "operations": [
     {
@@ -21,6 +21,11 @@
     {
       "id": "ripple-smoke-20261107",
       "type": "ripple",
+      "enabled": true
+    },
+    {
+      "id": "ac93dbe8-cdd5-49fc-afa2-05d275c42cb7",
+      "type": "grow",
       "enabled": true
     }
   ]
