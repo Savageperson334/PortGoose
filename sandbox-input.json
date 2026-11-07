@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "revision": "5400d874-c737-4d34-bd56-6c686d898631",
+  "revision": "e32e18fd-0ede-4388-bbe2-6b23a171b3a7",
   "seed": 4,
   "operations": [
     {
@@ -30,6 +30,11 @@
     },
     {
       "id": "2ba5887c-af35-47d8-94dd-11ce4e07a5bf",
+      "type": "twist",
+      "enabled": true
+    },
+    {
+      "id": "c137fc10-1de2-45b8-83df-cf9d924ec908",
       "type": "twist",
       "enabled": true
     }
