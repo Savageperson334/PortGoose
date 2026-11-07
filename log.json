@@ -3,5 +3,11 @@
     "id": "7a8ca65f-4d26-4fcf-9bea-0dd39e502fc9",
     "created_at": "2026-11-07T12:38:51.628Z",
     "message": "Howdy"
+  },
+  {
+    "id": "portgoose-python-sandbox-smoke-20261107",
+    "created_at": "2026-11-07T12:51:23.558Z",
+    "message": "calc (12+8)*3",
+    "source": "Python sandbox setup test"
   }
 ]
