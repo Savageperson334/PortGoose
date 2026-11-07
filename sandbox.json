@@ -1,8 +1,10 @@
 {
-  "status": "idle",
-  "operation": null,
-  "expression": null,
-  "source_id": null,
-  "message": "Submit a calculation or plot command to activate the sandbox.",
-  "updated_at": null
+  "status": "ok",
+  "operation": "calc",
+  "expression": "(12+8)*3",
+  "source_id": "portgoose-python-sandbox-smoke-20261107",
+  "source_time": "2026-11-07T12:51:23.558Z",
+  "message": "",
+  "value": 60.0,
+  "updated_at": "2026-11-07T12:51:32.035611+00:00"
 }
