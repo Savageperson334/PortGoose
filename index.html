@@ -270,7 +270,7 @@
       try {
         const result = await readLog("");
         drawLog(result.entries);
-        const commands = result.entries.filter(entry => /^\\s*(calc|plot)\\s+\\S/i.test(String(entry.message || "")));
+        const commands = result.entries.filter(entry => /^\s*(calc|plot)\s+\S/i.test(String(entry.message || "")));
         latestMathId = commands.length ? commands[commands.length - 1].id : null;
         status($("log-status"), "Showing the latest committed entries.");
         await refreshSandbox();
@@ -312,11 +312,11 @@
               }
             });
             $("message").value = "";
-            status($("submit-status"), /^\\s*(calc|plot)\\s+/i.test(message)
+            status($("submit-status"), /^\s*(calc|plot)\s+/i.test(message)
               ? "Math command committed! GitHub Actions will calculate it."
               : "Saved! Your entry is now committed to GitHub.");
             await refresh();
-            if (/^\\s*(calc|plot)\\s+/i.test(message)) {
+            if (/^\s*(calc|plot)\s+/i.test(message)) {
               let checks = 0;
               const poll = setInterval(async () => {
                 checks++;
