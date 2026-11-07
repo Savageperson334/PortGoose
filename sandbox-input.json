@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "revision": "initial-v2",
+  "revision": "test-ripple-20261107",
   "seed": 4,
   "operations": [
     {
@@ -16,6 +16,11 @@
     {
       "id": "stem-bloom-1",
       "type": "bloom",
+      "enabled": true
+    },
+    {
+      "id": "ripple-smoke-20261107",
+      "type": "ripple",
       "enabled": true
     }
   ]
