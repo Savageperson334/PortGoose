@@ -221,7 +221,8 @@
     if(state.refreshing) return;
     state.refreshing=true;
     try {
-      const [infile,outfile]=await Promise.all([getJson("sandbox-input.json"),getJson("sandbox.json")]);
+      const viewingToken=tokenInput.value.trim();
+      const [infile,outfile]=await Promise.all([getJson("sandbox-input.json",viewingToken),getJson("sandbox.json",viewingToken)]);
       state.input=infile.data;
       state.output=outfile.data;
       renderStack();
@@ -348,6 +349,9 @@
   $("actions-link").href="https://github.com/"+OWNER+"/"+REPO+"/actions/workflows/python-sandbox.yml";
   showLibrary();
   refresh();
-  // A read-only poll; polling never creates commits or GitHub Actions runs.
-  window.setInterval(refresh,8000);
+  // Public (unauthenticated) API requests are limited to ~60 per hour.
+  // Poll quickly ONLY while an authenticated mutation is awaiting processing;
+  // refresh public viewers at a much slower cadence to preserve that budget.
+  window.setInterval(() => {if(state.pending && tokenInput.value.trim()) refresh();},10000);
+  window.setInterval(() => {if(!state.pending) refresh();},180000);
 })();
