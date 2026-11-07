@@ -1,7 +1,7 @@
 {
   "schema": 2,
   "status": "ok",
-  "revision": "e32e18fd-0ede-4388-bbe2-6b23a171b3a7",
+  "revision": "18d73abd-12eb-46dd-a521-fe88f50bcf14",
   "seed": 4,
   "operations": [
     {
@@ -38,6 +38,11 @@
       "id": "c137fc10-1de2-45b8-83df-cf9d924ec908",
       "type": "twist",
       "enabled": true
+    },
+    {
+      "id": "5f9162d4-333f-401e-bc2c-9baf74d108c3",
+      "type": "thicken",
+      "enabled": true
     }
   ],
   "segments": [
@@ -50,7 +55,7 @@
         0.029404,
         -0.290994
       ],
-      "width": 0.045,
+      "width": 0.0765,
       "tip": false,
       "generation": 0
     },
@@ -63,7 +68,7 @@
         -0.130541,
         0.301938
       ],
-      "width": 0.03735,
+      "width": 0.063495,
       "tip": false,
       "generation": 1
     },
@@ -76,7 +81,7 @@
         -0.405771,
         0.41309
       ],
-      "width": 0.027639,
+      "width": 0.046986,
       "tip": false,
       "generation": 2
     },
@@ -89,7 +94,7 @@
         -0.594509,
         0.044758
       ],
-      "width": 0.027639,
+      "width": 0.046986,
       "tip": false,
       "generation": 2
     },
@@ -102,7 +107,7 @@
         -0.654912,
         0.458689
       ],
-      "width": 0.02294,
+      "width": 0.038998,
       "tip": true,
       "generation": 3
     },
@@ -115,7 +120,7 @@
         -0.926296,
         -0.22654
       ],
-      "width": 0.02294,
+      "width": 0.038998,
       "tip": true,
       "generation": 3
     }
@@ -126,7 +131,7 @@
         -0.405771,
         0.41309
       ],
-      "radius": 0.065,
+      "radius": 0.0819,
       "petals": 6
     },
     {
@@ -134,7 +139,7 @@
         -0.594509,
         0.044758
       ],
-      "radius": 0.072,
+      "radius": 0.09072,
       "petals": 7
     }
   ],
@@ -180,6 +185,12 @@
       "enabled": true,
       "segments": 6,
       "blooms": 2
+    },
+    {
+      "type": "thicken",
+      "enabled": true,
+      "segments": 6,
+      "blooms": 2
     }
   ],
   "bounds": {
@@ -191,7 +202,7 @@
   "stats": {
     "segments": 6,
     "blooms": 2,
-    "active": 7
+    "active": 8
   },
-  "updated_at": "2026-11-07T13:18:24.398516+00:00"
+  "updated_at": "2026-11-07T13:18:33.301903+00:00"
 }
