@@ -1,59 +1,58 @@
-# PortGoose
+# PortGoose · Mutation Lab
 
-A GitHub Pages experiment: submit a note or math command from a website; commit it into the repository; watch GitHub Actions process commands with Python and display the result in a sandbox on the same page.
+**Live website:** https://savageperson334.github.io/PortGoose/
 
-**Website:** https://savageperson334.github.io/PortGoose/
+PortGoose is a GitHub Pages experiment where **buttons mutate an evolving procedural form**. The page stores a stack of operations in GitHub, GitHub Actions runs a Python geometry engine, and the page renders the generated result.
 
-## What works
+The old text/log experiment is still present as a read-only archive; **text commands no longer control the sandbox**.
 
-1. **New entry:** submit text using a fine-grained GitHub token restricted to this repository.
-2. **Log:** `log.json` is updated via GitHub's Contents API; the page displays the log.
-3. **Python sandbox:** a push changing `log.json` triggers [the workflow](.github/workflows/python-sandbox.yml). It runs [a safe Python expression evaluator](scripts/process_log.py), writes `sandbox.json`, and commits the result.
-4. **Live viewer:** the sandbox section reads `sandbox.json` directly from GitHub. It can show a calculated value or a function graph without rebuilding the website.
+## How to try it
 
-The first end-to-end checks were `calc (12+8)*3` (result **60**) and `plot sin(x)` (**81** samples from −10 to +10).
+1. Open the website.
+2. Paste the same **fine-grained PortGoose token** as before into the GitHub session field (repository-scoped **Contents: Read and write**). You only need it to save changes; anyone can view the specimen.
+3. Select a mutation from the library, such as **Grow**, **Fork**, **Twist**, **Mirror**, **Ripple**, **Bloom**, **Prune**, or **Thicken**.
+4. Reorder the mutation stack with **↑ / ↓**, disable an operation with **◎**, or remove it with **×**. The order matters: each stage transforms the shape created by earlier stages.
+5. Use **Re-seed** to alter deterministic growth, **Surprise mutation** to add a random operation, or **Reset stack** to return to the single stem.
 
-### Commands
+Each click that changes state commits `sandbox-input.json`. The [Python mutation workflow](.github/workflows/python-sandbox.yml) runs [the safe geometry engine](scripts/mutate.py) and commits `sandbox.json`. The browser fetches both files from GitHub and draws the geometry as SVG. It checks more frequently after your own authenticated mutations; public views refresh more slowly to avoid GitHub's API rate limit.
 
-Submit any of these in the regular message field:
+The initial organism was generated with **Grow → Fork → Bloom**, giving 4 segments and 2 blossoms. Multiple sequential mutations can create branching, reflections, warping and decorated tips.
+
+## Data pipeline
 
 ```text
-calc (12+8)*3
-calc sqrt(144)
-calc 2^10
-plot sin(x)
-plot cos(x)*3
-plot x^2
-plot sqrt(x)
+Click button / change stack
+    ↓
+sandbox-input.json (ordered, enabled/disabled operation definitions)
+    ↓
+GitHub Actions (standard runner, Python 3.11, unit tests)
+    ↓
+scripts/mutate.py
+    ↓
+sandbox.json (segments, blooms, counts, bounds, revision)
+    ↓
+GitHub Pages SVG visualisation
 ```
 
-The latest valid `calc` or `plot` command determines the current sandbox. Ordinary notes such as `Howdy` remain in the log but do not change the sandbox. Invalid math commands show a friendly error.
+The engine never evaluates arbitrary submitted Python or expression text. It only recognizes an explicitly whitelisted set of operations with bounded geometry output and a maximum 18-step stack. Public repo files and mutations can be inspected in GitHub's commit history.
 
-This is **not general Python execution**. The AST-based evaluator only supports arithmetic, constants `pi`/`e`, `x` for plots, and a small whitelist of functions. The code has depth/length/size limits and tests. It does not execute arbitrary scripts, imports, file access, or submitted shell commands.
-
-### Setup / permission
-
-Pages is published from `main` / `(root)` under **Settings → Pages**.
-
-To submit entries, generate a [fine-grained token](https://github.com/settings/personal-access-tokens/new) limited to **PortGoose** with **Contents: Read and write** permission. Paste it into the form when submitting. The site does not save tokens to GitHub or browser storage.
-
-GitHub Actions uses the built-in `GITHUB_TOKEN` with **Contents: write** permission to commit just `sandbox.json`; no extra secret is required. Actions workflow changes and manual runs can also trigger sandbox processing.
-
-**Privacy/security:** the repo and log are public. Never enter passwords, secrets, or personal information in the log. Never commit a GitHub token. This is a single-user experiment, not a secure anonymous public form. The token is sent directly to GitHub by the page, but visiting any untrusted page or running untrusted browser extensions can expose secrets.
-
-**Updates:** after sending a math command, the page checks the result periodically and offers a manual **Check result** button. A GitHub Actions run may take a little time. Its own commits do not necessarily trigger a Pages redeploy, which is why the viewer reads the GitHub file directly.
-
-## Repository files
+## Files
 
 | Path | Purpose |
 | --- | --- |
-| `index.html` | Forms, log viewer, math sandbox and SVG plot |
-| `log.json` | Public notes and math command history |
-| `sandbox.json` | Current Python-calculated result/plot data |
-| `scripts/process_log.py` | Restricted math parser and processor |
-| `tests/test_processor.py` | Built-in unit tests |
-| `.github/workflows/python-sandbox.yml` | GitHub Actions worker |
+| `index.html` | Button-based mutation lab and read-only legacy log |
+| `mutation-app.js` | GitHub input/output synchronization and SVG visualisation |
+| `mutation-style.css` | Responsive dark interface |
+| `sandbox-input.json` | Source-of-truth operation stack, enabled flags and seed |
+| `scripts/mutate.py` | Pure-Python procedural geometry engine |
+| `tests/test_mutate.py` | Tests for ordering, toggling, caps and determinism |
+| `.github/workflows/python-sandbox.yml` | Compute and commit pipeline |
+| `sandbox.json` | Generated model and stats |
+| `log.json`, `scripts/process_log.py` | Retained from earlier text/math experiment; no longer in the current workflow |
 
-## Potential future work
+## Notes
 
-A browser-only sandbox would be even faster for simple math, while a separately authenticated agent could eventually propose edits to sandbox configurations. For now, expressions are deliberately limited so submitting a message cannot execute arbitrary Python on a GitHub Actions runner.
+- **Actions cost:** For this public repository, normal GitHub-hosted standard runners are free. Each mutation still creates Git commits and an Actions run, and Actions has usage limits.
+- **GitHub security:** The browser sends your token directly to GitHub for writes, does not save it in browser storage, and never includes it in a commit. Only enter it on the correct PortGoose website. Since the repository is public, all mutations and generated models are public. This is a small personal experiment, not a secure, token-free public submission service.
+- **Deploy:** Pages builds `main` from `/(root)`. The viewer fetches the new generated `sandbox.json` without needing a new Pages build.
+- **Concurrency:** The workflow fetches the latest `main` before computing and retries if another mutation arrives, so an older pending run should not overwrite newer inputs.
